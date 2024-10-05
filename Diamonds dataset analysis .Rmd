@@ -1,0 +1,166 @@
+---
+title: "Diamonds Dataset Analysis"
+author: "Betelhem Getachew"
+date: "2024-02-05"
+output: html_document
+          knitr:
+            packages:
+               -datasets  
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Diamonds Dataset Analysis
+
+loading the dataset To access the data-set and use all the functions needed to explore and analyze the data_frame, a package called ggplot2 need to be installed and loaded.However a package called Tidyverse consists of several R packages including ggplot2, diplyr, tidyr,and many others.The 'data()' function is used to load the data-set. So after installing and loading tidyverse,some rows of the data-set can be seen using the head() function.
+
+```{r}
+library(tidyverse)
+```
+
+## description of the data structure and the variables in the dataset.
+
+The diamonds data-set focuses on the prices and other attributes of almost 54000 round cut diamonds.This data-set has ten(10) variables namely
+
+1,carat-weight of the diamond (0.2–5.01),\
+2,cut-The quality of the cut(Fair, Good, Very Good, Premium, and ideal\
+3,price-in US dollars (\$326–\$18,823)\
+4,color-diamond colour, from D (best) to J (worst)\
+5,clarity-a measurement of how clear the diamond is (I1 (worst), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (best)) 6,x-length in mm (0–10.74)\
+7,y-width in mm (0–58.9)\
+8,z-depth in mm (0–31.8) 9,depth- The total depth percentage, which is the ratio of the depth to the average diameter of the diamond.\
+10,table-width of top of diamond relative to widest point (43–95)
+
+The data() function is used to import the data-set.
+
+```{r}
+data(diamonds)
+```
+
+To see the description of the data-set,'?diamonds' can be used
+
+```{r}
+?diamonds
+```
+
+To quickly inspect the contents of the data-set,the head() function is used.The head() function is helpful to view the top few rows of a data-set.
+
+```{r}
+head(diamonds,10)
+
+```
+
+To understand the structure of the data-set,'str()' function is used. str() provides the type of the data-set,the dimension of the data-set, and,name and type of the variables.
+
+```{r}
+str(diamonds)
+```
+
+From the result, it could be seen that the data-set is a tipple which is a modern and enhanced version of data-frame in R.The data-set has 53,940 rows and 10 columns. It can also be observed that the data-set consists of variables with different types: num-real numbers(positive numbers,negative numbers,decimals) int-integers ord.factor-ordinal categorical
+
+##Generate a descriptive summary of the following variables, price, carat, width , and depth. The output should be grouped by cut and clarity
+
+```{r}
+
+price_describe <- diamonds %>%
+  group_by(cut,clarity) %>%
+  summarize(mean_price=mean(price),
+            median_price=median(price),
+            min_price=min(price),
+            max_price=max(price),
+            sd_price=sd(price))
+
+price_describe
+
+```
+
+```{r}
+
+carat_describe <- diamonds %>%
+  group_by(cut,clarity) %>%
+summarize(mean_carat=mean(carat),
+            median_carat=median(carat),
+            min_carat=min(carat),
+            max_carat=max(carat),
+            sd_carat=sd(carat))
+carat_describe
+```
+
+```{r}
+
+width_describe <- diamonds %>%
+  group_by(cut,clarity) %>%
+summarize(mean_width=mean(y),
+            median_width=median(y),
+            min_width=min(y),
+            max_width=max(y),
+            sd_width=sd(y))
+width_describe
+```
+
+```{r}
+
+depth_describe <- diamonds %>%
+  group_by(cut,clarity) %>%
+summarize(mean_depth=mean(z),
+            median_depth=median(z),
+            min_depth=min(z),
+            max_depth=max(z),
+            sd_depth=sd(z))
+depth_describe
+
+```
+
+##Visualize the data, describe it and discuss your findings
+
+###Scatter Plot of Diamond Price vs. Carat Weight, Filtered by Cut and Clarity
+
+```{r}
+library(ggplot2)
+diamonds_carat_prices<-diamonds
+ggplot(diamonds_carat_prices, aes(x= carat, y=price, color=color)) + geom_point()+
+ggtitle("Diamond Price vs. Carat Weight")
+
+```
+
+Scatter plots help in determining the strength and direction of the relationship between two variables.As it can be clearly seen from the scatter plot diamonds with the same carat have different prices.This indicates that there is no relation ship between the carat and price of a diamond.
+
+\###"Price of Diamonds by Cut"
+
+```{r}
+library(ggplot2)
+diamonds_cut_prices<-diamonds
+ggplot(diamonds_cut_prices, aes(x= cut, y=mean(price),color=color)) + geom_col()+
+ggtitle("Price of Diamonds by Cut")
+```
+
+The above column graph illustrates the price of diamonds by the quality of cut.It can be concluded that diamonds with a fair cut quality have low price and diamonds with ideal or great quality of cut have higher price.however, it is a perfectly positive association because diamonds with a fair quality costs less and those with ideal quality costs more
+
+###Frequency of Diamonds by Cut and Clarity
+
+```{r}
+ggplot(diamonds, aes(x = cut ,fill = clarity)) +
+  geom_bar() +
+  labs(x = "Cut", y="distribution",fill = "Clarity") +
+  ggtitle("Frequency of Diamonds by Cut and Clarity")
+
+```
+
+The above graph illustrates that regarding the quality of cut,ideal cut diamonds have increased distribution which is around 24,000.Therefore it can be concluded that there are more diamonds with ideal quality or have high quality
+
+\` ###Price of Diamonds by Color
+
+```{r}
+library(ggplot2)
+diamonds_color_prices<-diamonds %>%
+  filter(clarity=="IF")
+ggplot(diamonds_color_prices, aes(x= color, y=price,color=cut)) + geom_col()+
+ggtitle("Price of Diamonds by Color")
+```
+
+From the above column graph it can be seen that color and price do not have a specific correlation as the color of the diamond goes from best to worst,the price reaches the plateau and falls down.This could be caused by other variables such as carat,length,width, and depth of the diamonds.
+
+##Are there differences based on Cut and Clarity? From The column graph of price of diamonds by cutit can be concluded that the price of diamonds has a direct relationship with the cct,indicating that a diamond with increased cut quality costs more than diamonds with low cut quality
+
+On the other hand, As it can be seen from the above Scatter Plot of Diamond Price vs. Carat shows that there is no defined relation ship between price and carat as the same carat diamonds have different prices.
